@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perpustakaan</title>
+<style>
+:root{--bg:#fafaf9;--soft:#f5f5f4;--line:#e7e5e4;--text:#1c1917;--muted:#78716c;--accent:#ea580c;--danger:#dc2626;--r:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:15px/1.55 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:var(--text);background:var(--bg)}
+[x-cloak]{display:none!important}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+h2{font-size:22px;font-weight:700}h3{font-size:16px;margin-bottom:10px}
+.btn{padding:8px 16px;border:1px solid var(--text);border-radius:6px;background:var(--text);color:#fff;font-weight:600;cursor:pointer}
+.btn:hover{background:#44403c;border-color:#44403c}.btn.plain{background:#fff;color:var(--text);border-color:var(--line)}.btn.plain:hover{background:var(--soft)}.btn.plain.danger{color:var(--danger)}.btn.sm{padding:3px 10px;font-size:13px}.btn.block{width:100%}.btn:disabled{opacity:.35;cursor:not-allowed}
+label{display:block;margin-bottom:14px;font-size:14px;font-weight:600}.input{display:block;width:100%;margin-top:4px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:15px;font-weight:400}.input:focus{border-color:var(--text);outline:none}
+.hint,.check{font-size:13px;font-weight:400;color:var(--muted)}.empty{padding:22px;text-align:center;color:var(--muted)}.msg{margin-bottom:14px;padding:9px 12px;border:1px solid var(--line);border-radius:6px;background:var(--soft)}.msg.err{border-color:#fecaca;background:#fef2f2;color:#b91c1c}.msg.ok{border-color:#bbf7d0;background:#f0fdf4;color:#166534}
+.box,.card{border:1px solid var(--line);border-radius:var(--r);background:#fff}.box{padding:18px}.card{overflow:hidden}
+.login{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}.login-side{display:flex;flex-direction:column;justify-content:center;padding:48px;border-right:1px solid var(--line);background:var(--soft);color:var(--muted)}.login-side h1{margin-bottom:10px;font-size:32px;line-height:1.2;color:var(--text)}.login-side p{max-width:320px}.auth{align-self:center;justify-self:center;width:100%;max-width:400px;padding:32px 24px}
+.tabs{display:flex;gap:4px;margin:18px 0;padding:4px;border-radius:6px;background:var(--soft)}.tabs button{flex:1;padding:6px;border:0;border-radius:4px;background:none;color:var(--muted);cursor:pointer}.tabs button.on{background:#fff;color:var(--text);font-weight:600}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}aside{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:24px;padding:22px 14px;border-right:1px solid var(--line);background:#fff;color:var(--muted)}.brand{padding:0 10px;font-size:18px;font-weight:700;color:var(--text)}aside nav{display:flex;flex-direction:column;gap:2px}aside nav button{padding:8px 12px;border:0;border-left:3px solid transparent;border-radius:0 6px 6px 0;background:none;color:inherit;text-align:left;cursor:pointer}aside nav button:hover{background:var(--soft);color:var(--text)}aside nav button.on{background:var(--soft);border-left-color:var(--accent);color:var(--text);font-weight:600}.user{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--line);font-size:14px}.user b{display:block;margin-bottom:8px;color:var(--text)}.content{min-width:0;padding:32px 36px}.page{max-width:1100px;margin:0 auto}.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:22px}.head h2{margin:0}.head p{font-size:14px;color:var(--muted)}
+.pos{display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start}.books{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;padding:14px}.book{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;text-align:left;cursor:pointer}.book:hover:not(:disabled){border-color:var(--text);background:var(--bg)}.book:disabled{background:var(--soft);color:#a8a29e;cursor:not-allowed}.book small{font-size:13px;color:var(--muted)}.book .stok{align-self:flex-start;margin-top:6px;padding:0 9px;border-radius:99px;background:var(--soft);font-size:12px;font-weight:600;color:var(--muted)}.book .stok.habis{background:#fef2f2;color:var(--danger)}.side{position:sticky;top:20px}.picked{margin-bottom:12px}.picked li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);list-style:none}.picked button{border:0;background:none;color:var(--danger);cursor:pointer}
+.bar{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}.bar .input{max-width:320px;margin:0}.bar span{margin-left:auto;font-size:13px;color:var(--muted);white-space:nowrap}.scroll{overflow-x:auto}table{width:100%;min-width:650px;border-collapse:collapse}th,td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}th{background:var(--bg);font-size:13px;color:var(--muted);white-space:nowrap}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:var(--bg)}.r{text-align:right}.nw{white-space:nowrap}.shrink{width:1%}.acts{display:flex;justify-content:flex-end;gap:6px;white-space:nowrap}.tag{padding:1px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap}.tag.aktif{background:#fff1e6;color:#c2410c}.tag.selesai{background:#f0fdf4;color:#166534}.tag.telat{background:#fef2f2;color:#b91c1c}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.stats b{display:block;font-size:28px;line-height:1.3}.stats span{font-size:14px;color:var(--muted)}
+.overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.35)}.dialog{width:100%;max-width:420px;max-height:90vh;overflow-y:auto;padding:20px;border-radius:10px;background:#fff}.dialog h3{margin-bottom:14px}.dialog .acts{margin-top:8px}.toast{position:fixed;bottom:20px;left:50%;z-index:80;transform:translateX(-50%);padding:9px 16px;border-radius:6px;background:var(--text);color:#fff;max-width:90vw;text-align:center}
+@media(max-width:760px){.login{grid-template-columns:1fr}.login-side{padding:28px 24px;border-right:0;border-bottom:1px solid var(--line)}.app{display:block}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:12px 14px;border-right:0;border-bottom:1px solid var(--line)}aside nav{flex-direction:row;flex-wrap:wrap;flex-basis:100%;order:3}aside nav button{padding:6px 10px;border-left:0;border-radius:6px}.user{display:flex;align-items:center;gap:10px;margin:0 0 0 auto;padding:0;border:0}.user b{margin:0}.content{padding:18px 14px}.pos{grid-template-columns:1fr}.side{position:static}}
+</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.14.1/cdn.min.js"></script>
+</head>
+<body x-data="app()" x-init="init()" x-cloak @keydown.escape.window="open=false">
+<template x-if="!user"><div class="login">
+  <div class="login-side"><h1 x-text="settings.libraryName||'Perpustakaan'"></h1><p>Kelola koleksi buku, anggota, dan peminjaman dalam satu tempat.</p></div>
+  <div class="auth">
+    <h2>Masuk ke sistem</h2><p class="hint">Gunakan akun petugas Anda.</p>
+    <div class="tabs"><template x-for="t in [['masuk','Masuk'],['daftar','Daftar'],['lupa','Lupa sandi']]" :key="t[0]"><button type="button" :class="{on:tab===t[0]}" @click="setTab(t[0])" x-text="t[1]"></button></template></div>
+    <div class="msg err" x-show="!persistent">Browser tidak mendukung penyimpanan permanen. Data mungkin hilang saat halaman ditutup.</div>
+    <div class="msg" :class="msg.type" x-show="msg.text" x-text="msg.text"></div>
+    <form x-show="tab==='masuk'" @submit.prevent="login()">
+      <label>Username<input class="input" x-model="lf.username" autocomplete="username" required></label>
+      <label>Kata sandi<input class="input" :type="showPw?'text':'password'" x-model="lf.password" autocomplete="current-password" required></label>
+      <button class="btn block">Masuk</button>
+    </form>
+    <form x-show="tab==='daftar'" @submit.prevent="register()">
+      <label>Nama lengkap<input class="input" x-model="rf.name" required></label>
+      <label>Username<input class="input" x-model="rf.username" autocomplete="username" required><span class="hint">3–20 huruf atau angka.</span></label>
+      <label>Kata sandi<input class="input" :type="showPw?'text':'password'" x-model="rf.password" autocomplete="new-password" required><span class="hint">Minimal 6 karakter.</span></label>
+      <label>Pertanyaan keamanan<select class="input" x-model="rf.q"><template x-for="s in questions" :key="s"><option x-text="s"></option></template></select></label>
+      <label>Jawaban<input class="input" x-model="rf.a" required><span class="hint">Dipakai jika lupa kata sandi.</span></label>
+      <button class="btn block">Buat akun</button>
+    </form>
+    <form x-show="tab==='lupa'" @submit.prevent="ff.step===1?findQuestion():resetPassword()">
+      <label>Username<input class="input" x-model="ff.username" :readonly="ff.step===2" required></label>
+      <template x-if="ff.step===2"><div><div class="msg" x-text="ff.q"></div><label>Jawaban<input class="input" x-model="ff.a" required></label><label>Kata sandi baru<input class="input" :type="showPw?'text':'password'" x-model="ff.password" autocomplete="new-password" required></label></div></template>
+      <button class="btn block" x-text="ff.step===1?'Cari akun':'Ubah kata sandi'"></button>
+    </form>
+    <label class="check" style="margin-top:12px"><input type="checkbox" x-model="showPw"> Tampilkan kata sandi</label>
+  </div>
+</div></template>
+
+<template x-if="user"><div class="app">
+  <aside><div class="brand" x-text="settings.libraryName||'Perpustakaan'"></div>
+    <nav><template x-for="p in pages" :key="p[0]"><button :class="{on:page===p[0]}" @click="go(p[0])" x-text="p[1]"></button></template></nav>
+    <div class="user"><b x-text="user.name"></b><button class="btn plain sm" @click="logout()">Keluar</button></div>
+  </aside>
+  <div class="content"><div class="page">
+    <div class="head"><div><h2 x-text="cur[1]"></h2><p x-text="cur[2]"></p></div><button class="btn" x-show="ent" @click="edit()" x-text="ent?'Tambah '+ent.label.toLowerCase():''"></button></div>
+    <section x-show="page==='sirkulasi'" class="pos">
+      <div class="card"><div class="bar"><input class="input" placeholder="Cari judul atau ISBN" aria-label="Cari buku" x-model="q"><span x-text="filteredBooks.length+' buku'"></span></div>
+        <div class="books"><template x-for="p in filteredBooks" :key="p.id"><button class="book" :disabled="p.stock<=0 || cart.includes(p.id)" @click="addToCart(p)"><b x-text="p.name"></b><small x-text="p.sku"></small><span class="stok" :class="{habis:p.stock<=0}" x-text="p.stock>0?'Stok: '+p.stock:'Habis'"></span></button></template></div>
+        <p class="empty" x-show="!filteredBooks.length">Buku tidak ditemukan.</p>
+      </div>
+      <div class="box side"><h3>Buku yang dipinjam</h3><ul class="picked"><template x-for="b in cartItems" :key="b.id"><li><span x-text="b.name"></span><button type="button" @click="cart=cart.filter(id=>id!==b.id)">Hapus</button></li></template></ul>
+        <p class="empty" x-show="!cartItems.length">Belum ada buku dipilih.</p>
+        <label>Anggota<select class="input" x-model="memberId"><option value="">Pilih anggota</option><template x-for="c in members" :key="c.id"><option :value="c.id" x-text="c.name"></option></template></select></label>
+        <label>Lama pinjam (hari)<input class="input" type="number" min="1" max="365" x-model.number="days" required></label>
+        <button class="btn block" :disabled="!cart.length||!memberId||!members.some(m=>m.id===memberId)" @click="checkout()">Simpan peminjaman</button>
+      </div>
+    </section>
+    <section x-show="ent" class="card"><div class="bar"><input class="input" placeholder="Cari..." aria-label="Cari" x-model="dq"><span x-text="rows.length+' data'"></span></div>
+      <template x-if="ent"><div class="scroll"><table><thead><tr><template x-for="c in ent.cols" :key="c[0]"><th x-text="c[1]"></th></template><th class="shrink"></th></tr></thead>
+        <tbody><template x-for="r in rows" :key="r.id"><tr><template x-for="c in ent.cols" :key="c[0]"><td x-text="cell(r,c)"></td></template><td><div class="acts"><button class="btn plain sm" @click="edit(r)">Ubah</button><button class="btn plain sm danger" @click="remove(r)">Hapus</button></div></td></tr></template></tbody>
+      </table></div></template><p class="empty" x-show="!rows.length">Data tidak ditemukan.</p>
+    </section>
+    <section x-show="page==='riwayat'" class="card"><div class="scroll"><table><thead><tr><th>No.</th><<th>Tanggal & Jam Pinjam</th><th>Jatuh tempo</th><th>Anggota</th><th>Buku</th><th>Status</th><th>Aksi</th></tr></thead>
+      <tbody><template x-for="s in sales" :key="s.id"><tr><td class="nw" x-text="s.no"></td><td class="nw" x-text="dateTime(s.date)"></td><td class="nw" x-text="d(s.due)"></td><td x-text="s.memberName"></td><td x-text="s.items.map(i=>i.name).join(', ')"></td><td><span class="tag" :class="status(s)[1]" x-text="status(s)[0]"></span></td><td><div class="acts"><button class="btn sm" x-show="s.status==='Aktif'" @click="returnBook(s)">Kembalikan</button><button class="btn plain sm danger" @click="deleteSale(s)">Hapus</button></div></td></tr></template></tbody>
+    </table></div><p class="empty" x-show="!sales.length">Belum ada peminjaman.</p></section>
+    <section x-show="page==='terlambat'" class="card">
+      <div class="bar">
+        <b>Anggota Terlambat</b>
+        <span x-text="lateMembers.length+' peminjaman terlambat'"></span>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>No. Transaksi</th><th>Anggota</th><th>Buku</th><th>Jatuh Tempo</th><th>Terlambat</th><th>Perkiraan Denda</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <template x-for="s in lateMembers" :key="s.id">
+              <tr>
+                <td class="nw" x-text="s.no"></td>
+                <td x-text="s.memberName"></td>
+                <td x-text="s.items.map(i=>i.name).join(', ')"></td>
+                <td class="nw" x-text="d(s.due)"></td>
+                <td x-text="lateDays(s.due)+' hari'"></td>
+                <td class="nw" x-text="money(lateDays(s.due)*DENDA_PER_HARI)"></td>
+                <td><span class="tag telat">Terlambat</span></td>
+                <td><button class="btn sm" @click="returnBook(s)">Kembalikan</button></td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <p class="empty" x-show="!lateMembers.length">Tidak ada anggota yang terlambat saat ini.</p>
+    </section>
+    <section x-show="page==='denda'" class="card"><div class="bar"><b>Riwayat Denda</b><span x-text="fines.length+' transaksi'"></span></div><div class="scroll"><table><thead><tr><th>No. Transaksi</th><th>Anggota</th><th>Buku</th><th>Terlambat</th><th>Total Denda</th><th>Status</th><th>Aksi</th></tr></thead>
+      <tbody><template x-for="f in fines" :key="f.id"><tr><td x-text="f.no"></td><td x-text="f.memberName"></td><td x-text="f.items"></td><td x-text="f.lateDays+' hari'"></td><td class="nw" x-text="money(f.amount)"></td><td><span class="tag" :class="f.paid?'selesai':'telat'" x-text="f.paid?'Sudah dibayar':'Belum dibayar'"></span></td><td><button class="btn plain sm" x-show="!f.paid" @click="payFine(f)">Bayar</button></td></tr></template></tbody>
+    </table></div><p class="empty" x-show="!fines.length">Belum ada riwayat denda.</p></section>
+    
+<section x-show="page==='laporan'">
+
+  <!-- RINGKASAN -->
+  <div class="stats">
+    <template x-for="s in stats" :key="s[0]">
+      <div class="box">
+        <b x-text="s[1]"></b>
+        <span x-text="s[0]"></span>
+      </div>
+    </template>
+  </div>
+
+  <!-- LAPORAN PEMINJAMAN -->
+  <div class="card" style="margin-top:20px">
+    <div class="bar">
+      <b>Detail Laporan Peminjaman</b>
+      <span x-text="sales.length+' transaksi'"></span>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>No. Transaksi</th>
+            <th>Nama Anggota</th>
+            <th>Buku</th>
+            <th>Tanggal & Jam Pinjam</th>
+            <th>Jatuh Tempo</th>
+            <th>Tanggal & Jam Kembali</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="s in sales" :key="s.id">
+            <tr>
+              <td x-text="s.no"></td>
+              <td x-text="s.memberName"></td>
+              <td x-text="s.items.map(i=>i.name).join(', ')"></td>
+              <td class="nw" x-text="dateTime(s.date)"></td>
+              <td class="nw" x-text="d(s.due)"></td>
+              <td class="nw" x-text="dateTime(s.returnDate)"></td>
+              <td>
+                <span class="tag"
+                  :class="status(s)[1]"
+                  x-text="status(s)[0]">
+                </span>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="empty" x-show="!sales.length">
+      Belum ada laporan peminjaman.
+    </p>
+  </div>
+
+  <!-- LAPORAN DENDA -->
+  <div class="card" style="margin-top:20px">
+    <div class="bar">
+      <b>Laporan Detail Denda</b>
+      <span x-text="fines.length+' transaksi'"></span>
+    </div>
+
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>No. Transaksi</th>
+            <th>Nama Anggota</th>
+            <th>Buku</th>
+            <th>Tanggal & Jam Denda</th>
+            <th>Terakhir Diperbarui</th>
+            <th>Terlambat</th>
+            <th>Total Denda</th>
+            <th>Pembayaran</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template x-for="f in fines" :key="f.id">
+            <tr>
+              <td x-text="f.no"></td>
+              <td x-text="f.memberName"></td>
+              <td x-text="f.items"></td>
+              <td class="nw" x-text="dateTime(f.createdAt)"></td>
+              <td class="nw" x-text="dateTime(f.updatedAt)"></td>
+              <td x-text="f.lateDays+' hari'"></td>
+              <td class="nw" x-text="money(f.amount)"></td>
+              <td>
+                <span class="tag"
+                  :class="f.paid?'selesai':'telat'"
+                  x-text="f.paid?'Sudah dibayar':'Belum dibayar'">
+                </span>
+                <div class="hint"
+                  x-show="f.paid && f.paidDate"
+                  x-text="'Dibayar: '+dateTime(f.paidDate)">
+                </div>
+              </td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="empty" x-show="!fines.length">
+      Belum ada laporan denda.
+    </p>
+  </div>
+
+</section>
+
+    <section x-show="page==='pengaturan'"><form class="box" style="max-width:460px" @submit.prevent="saveSettings()"><label>Nama perpustakaan<input class="input" x-model="sf.libraryName" required></label><label>Alamat<input class="input" x-model="sf.address"></label><button class="btn">Simpan pengaturan</button></form></section>
+  </div></div>
+</div></template>
+
+<div class="overlay" x-show="open" x-cloak @click.self="open=false"><form class="dialog" @submit.prevent="save()"><h3 x-text="(form.id?'Ubah ':'Tambah ')+(ent?ent.label.toLowerCase():'')"></h3>
+  <template x-if="ent"><div><template x-for="(c,i) in ent.cols" :key="c[0]"><label><span x-text="c[1]"></span><input class="input" :type="c[2]==='number'?'number':'text'" :min="c[2]==='number'?0:null" x-model="form[c[0]]" :required="i===0"></label></template></div></template>
+  <div class="acts"><button type="button" class="btn plain" @click="open=false">Batal</button><button class="btn">Simpan</button></div>
+</form></div>
+<div class="toast" x-show="toastMsg" x-cloak x-text="toastMsg" role="status"></div>
+
+<script>
+const store=(()=>{
+  const mem={};let ok=false;
+  try{localStorage.setItem('_pst_test', '1');localStorage.removeItem('_pst_test');ok=true}catch(e){}
+  return{ok,get(k,d){try{const v=ok?localStorage.getItem(k):mem[k];return v!==null&&v!==undefined?JSON.parse(v):d}catch(e){return d}},
+    set(k,v){const s=JSON.stringify(v);if(ok){try{localStorage.setItem(k,s);return}catch(e){}}mem[k]=s},
+    del(k){if(ok){try{localStorage.removeItem(k)}catch(e){}}delete mem[k]}};
+})();
+const ENT={
+  buku:{key:'books',label:'Buku',cols:[['name','Judul'],['sku','ISBN'],['category','Kategori'],['author','Penulis'],['stock','Stok','number']],blank:{name:'',sku:'',category:'',author:'',stock:1}},
+  anggota:{key:'members',label:'Anggota',cols:[['name','Nama'],['phone','Telepon'],['address','Alamat']],blank:{name:'',phone:'',address:''}}
+};
+const PAGES=[
+  ['sirkulasi','Peminjaman','Pilih buku dan anggota, lalu simpan peminjaman.'],
+  ['buku','Buku','Daftar koleksi buku beserta stoknya.'],
+  ['anggota','Anggota','Daftar anggota perpustakaan.'],
+  ['riwayat','Riwayat','Semua peminjaman dan status pengembaliannya.'],
+  ['terlambat','Anggota Terlambat','Daftar anggota dengan peminjaman yang melewati jatuh tempo.'],
+  ['denda','Riwayat Denda','Denda keterlambatan Rp5.000 per hari.'],
+  ['laporan','Laporan','Ringkasan data perpustakaan dan denda.'],
+  ['pengaturan','Pengaturan','Nama dan alamat perpustakaan.']
+];
+const QUESTIONS=['Nama hewan peliharaan pertama Anda?','Nama sekolah dasar Anda?','Kota tempat Anda lahir?'];
+const DATA=['books','members','sales','fines'];
+const DENDA_PER_HARI=5000;
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const norm=s=>String(s||'').trim().toLowerCase();
+const pub=u=>({id:u.id,name:u.name,username:u.username});
+const newRf=()=>({name:'',username:'',password:'',q:QUESTIONS[0],a:''});
+const newFf=()=>({step:1,username:'',q:'',a:'',password:''});
+const dayMs=86400000;
+function dateOnly(value){const d=new Date(value);return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function lateDays(due,end=new Date()){if(!due)return 0;return Math.max(0,Math.floor((dateOnly(end)-dateOnly(due))/dayMs))}
+async function hash(s){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('pustaka:'+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return'f'+s}}
+function app(){return{
+  pages:PAGES,questions:QUESTIONS,persistent:store.ok,user:null,page:'sirkulasi',tab:'masuk',msg:{type:'',text:''},showPw:false,
+  lf:{username:'',password:''},rf:newRf(),ff:newFf(),books:[],members:[],sales:[],fines:[],settings:{libraryName:'Perpustakaan',address:''},sf:{},
+  q:'',dq:'',cart:[],memberId:'',days:7,form:{},open:false,toastMsg:'',_t:null,
+  init(){
+    DATA.forEach(k=>{const v=store.get('pst_'+k,[]);this[k]=Array.isArray(v)?v:[]});
+    this.settings=store.get('pst_settings',{libraryName:'Perpustakaan',address:''})||{libraryName:'Perpustakaan',address:''};
+    this.sf={...this.settings};
+    if(this.books.length===0 && store.get('pst_books',null)===null){
+      this.books=[
+        {id:uid(),sku:'ISBN-001',name:'Pemrograman Web',category:'Teknologi',author:'Budi',stock:5},
+        {id:uid(),sku:'ISBN-002',name:'Struktur Data',category:'Teknologi',author:'Rinaldi',stock:3}
+      ];this.persist();
+    }
+    // Perbarui atau buat catatan denda untuk peminjaman terlambat, setiap kali aplikasi dibuka.
+    this.syncFines();
+    const u=store.get('pst_users',[]).find(x=>x.id===store.get('pst_session',null));
+    if(u)this.user=pub(u);
+  },
+  persist(){DATA.forEach(k=>store.set('pst_'+k,this[k]));store.set('pst_settings',this.settings)},
+  go(p){this.syncFines();this.page=p;this.dq=''},
+  get cur(){return PAGES.find(p=>p[0]===this.page)||PAGES[0]},
+  toast(m){this.toastMsg=m;clearTimeout(this._t);this._t=setTimeout(()=>this.toastMsg='',2800)},
+  d(iso){return iso?new Date(iso).toLocaleDateString('id-ID'):'-'},
+dateTime(iso) {
+  if (!iso) return '-';
+  return new Date(iso).toLocaleString('id-ID', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+},
+  money(n){return 'Rp'+Number(n||0).toLocaleString('id-ID')},
+  setTab(t){this.tab=t;this.msg={type:'',text:''};this.ff=newFf()},
+  fail(text){this.msg={type:'err',text}},
+  signIn(u){store.set('pst_session',u.id);this.user=pub(u);this.msg={type:'',text:''}},
+  async register(){
+    const f=this.rf,un=norm(f.username),users=store.get('pst_users',[]);
+    if(!String(f.name).trim()||!/^[a-z0-9]{3,20}$/.test(un)||f.password.length<6)return this.fail('Username 3–20 huruf/angka, sandi minimal 6 karakter.');
+    if(users.some(u=>u.username===un))return this.fail('Username sudah dipakai.');
+    const u={id:uid(),name:f.name.trim(),username:un,pass:await hash(f.password),q:f.q,a:await hash(norm(f.a))};
+    store.set('pst_users',[...users,u]);this.signIn(u);this.rf=newRf();
+  },
+  async login(){
+    const un=norm(this.lf.username),u=store.get('pst_users',[]).find(x=>x.username===un);
+    if(!u||u.pass!==await hash(this.lf.password))return this.fail('Username atau kata sandi salah. Pastikan sandi minimal 6 karakter.');
+    this.signIn(u);this.lf={username:'',password:''};
+  },
+  logout(){store.del('pst_session');this.user=null;this.setTab('masuk')},
+  findQuestion(){const un=norm(this.ff.username),u=store.get('pst_users',[]).find(x=>x.username===un);if(!u)return this.fail('Akun tidak ditemukan.');this.msg={type:'',text:''};this.ff.q=u.q;this.ff.step=2},
+  async resetPassword(){
+    const users=store.get('pst_users',[]),u=users.find(x=>x.username===norm(this.ff.username));
+    if(this.ff.password.length<6)return this.fail('Kata sandi baru minimal 6 karakter.');
+    if(!u||u.a!==await hash(norm(this.ff.a)))return this.fail('Jawaban tidak cocok.');
+    u.pass=await hash(this.ff.password);store.set('pst_users',users);this.ff=newFf();this.tab='masuk';this.msg={type:'ok',text:'Kata sandi diubah. Silakan masuk.'};
+  },
+  get ent(){return ENT[this.page]||null},
+  get rows(){if(!this.ent)return[];const k=this.dq.toLowerCase();return this[this.ent.key].filter(r=>!k||Object.values(r).join(' ').toLowerCase().includes(k))},
+  cell(r,c){const v=r[c[0]];return v===''||v==null?'-':v},
+  edit(r){if(!this.ent)return;this.form=r?{...r}:{...this.ent.blank,id:null};this.open=true},
+  save(){
+    if(!this.ent)return;
+    const{key,cols}=this.ent,f={...this.form};
+    cols.forEach(([k,,type])=>{if(type==='number')f[k]=Math.max(0,Number(f[k])||0);else f[k]=String(f[k]||'').trim()});
+    if(!f.name)return;
+    if(key==='books')f.sku=f.sku||'ISBN-'+Date.now().toString().slice(-4);
+    this[key]=f.id?this[key].map(x=>x.id===f.id?f:x):[{...f,id:uid()},...this[key]];
+    this.persist();this.open=false;this.toast('Data disimpan');
+  },
+  remove(r){
+    if(!confirm('Hapus "'+r.name+'"?'))return;
+    if(this.ent.key==='members'&&this.sales.some(s=>s.status==='Aktif'&&s.memberId===r.id))return this.toast('Anggota masih memiliki peminjaman aktif.');
+    const key=this.ent.key;this[key]=this[key].filter(x=>x.id!==r.id);
+    if(key==='books')this.cart=this.cart.filter(id=>id!==r.id);
+    this.persist();this.toast('Data dihapus');
+  },
+  get filteredBooks(){const k=this.q.toLowerCase();return this.books.filter(p=>!k||String(p.name).toLowerCase().includes(k)||String(p.sku).toLowerCase().includes(k))},
+  get cartItems(){return this.cart.map(id=>this.books.find(b=>b.id===id)).filter(Boolean)},
+  addToCart(p){if(p.stock>0&&!this.cart.includes(p.id))this.cart.push(p.id)},
+  checkout(){
+    const m=this.members.find(c=>c.id===this.memberId);
+    if(!m||!this.cart.length)return this.toast('Pilih anggota dan minimal satu buku.');
+    const items=this.cartItems;
+    if(!items.length||items.some(i=>{const b=this.books.find(x=>x.id===i.id);return !b||b.stock<1}))return this.toast('Stok buku tidak mencukupi.');
+    const now=new Date(),due=new Date(now);due.setDate(due.getDate()+Math.max(1,Math.min(365,Number(this.days)||7)));
+    const sale={id:uid(),no:'TRX-'+Date.now().toString().slice(-6),date:now.toISOString(),due:due.toISOString(),memberId:m.id,memberName:m.name,items:items.map(({id,name})=>({id,name})),status:'Aktif',returnDate:null};
+    this.restock(sale,-1);this.sales=[sale,...this.sales];this.cart=[];this.memberId='';this.persist();this.toast('Peminjaman disimpan');
+  },
+  restock(sale,n){this.books=this.books.map(p=>sale.items.some(i=>i.id===p.id)?{...p,stock:Math.max(0,p.stock+n)}:p)},
+  lateDays(due){return lateDays(due)},
+  get lateMembers(){return this.sales.filter(s=>this.isLate(s))},
+  isLate(s){return s.status==='Aktif'&&lateDays(s.due)>0},
+  status(s){return this.isLate(s)?['Terlambat','telat']:[s.status,s.status==='Selesai'?'selesai':'aktif']},
+  // Denda dicatat sekali per transaksi, lalu nominalnya diselaraskan jika transaksi masih aktif.
+  syncFines(){
+    let changed=false;
+    const now=new Date();
+    const next=this.fines.map(f=>({...f}));
+    for(const s of this.sales){
+      const end=s.returnDate||now;
+      const days=lateDays(s.due,end);
+      const amount=days*DENDA_PER_HARI;
+      const idx=next.findIndex(f=>f.saleId===s.id);
+      if(days>0){
+        if(idx<0){
+          const waktuSekarang = new Date().toISOString();
+
+next.push({
+  id: uid(),
+  saleId: s.id,
+  no: s.no,
+  memberId: s.memberId || '',
+  memberName: s.memberName || 'Umum',
+  items: (s.items || []).map(i => i.name).join(', '),
+  lateDays: days,
+  amount: amount,
+  createdAt: waktuSekarang,
+  updatedAt: waktuSekarang,
+  paid: false,
+  paidDate: null
+});
+        }else{
+          const f=next[idx];
+          // Setelah denda dibayar, jangan menaikkan tagihan lama. Untuk pinjaman aktif yang masih terlambat,
+          // jumlah hari dan tagihan diperbarui selama belum dibayar.
+          if(!f.paid&&(f.lateDays!==days||f.amount!==amount)){next[idx] = {
+  ...f,
+  lateDays: days,
+  amount: amount,
+  updatedAt: new Date().toISOString()
+  };changed=true}
+        }
+      }
+    }
+    if(changed){this.fines=next;this.persist()}
+  },
+  returnBook(s){
+    if(s.status!=='Aktif')return;
+    const returnedAt=new Date().toISOString();
+    const updated={...s,status:'Selesai',returnDate:returnedAt};
+    this.sales=this.sales.map(x=>x.id===s.id?updated:x);
+    this.restock(s,1);
+    // Hitung denda sampai tanggal pengembalian yang sebenarnya.
+    const days=lateDays(s.due,new Date(returnedAt));
+    if(days>0){
+      const amount=days*DENDA_PER_HARI,idx=this.fines.findIndex(f=>f.saleId===s.id);
+      const fine = {
+  id: idx >= 0 ? this.fines[idx].id : uid(),
+  saleId: s.id,
+  no: s.no,
+  memberId: s.memberId || '',
+  memberName: s.memberName || 'Umum',
+  items: (s.items || []).map(i => i.name).join(', '),
+  lateDays: days,
+  amount,
+  createdAt: idx >= 0 ?
+    (this.fines[idx].createdAt || returnedAt) :
+    returnedAt,
+  updatedAt: returnedAt,
+  paid: idx >= 0 ? this.fines[idx].paid : false,
+  paidDate: idx >= 0 ? this.fines[idx].paidDate : null
+};
+    }
+    this.persist();this.toast(days>0?'Buku dikembalikan. Denda '+this.money(days*DENDA_PER_HARI)+' tercatat.':'Buku dikembalikan');
+  },
+  deleteSale(s){
+    if(!confirm('Hapus riwayat '+s.no+'? Denda terkait juga akan dihapus.'))return;
+    if(s.status==='Aktif')this.restock(s,1);
+    this.sales=this.sales.filter(x=>x.id!==s.id);this.fines=this.fines.filter(f=>f.saleId!==s.id);this.persist();this.toast('Riwayat dihapus');
+  },
+  payFine(f){
+    if(f.paid)return;
+    const sale=this.sales.find(s=>s.id===f.saleId);
+    if(sale&&sale.status==='Aktif')return this.toast('Kembalikan buku terlebih dahulu agar total denda final.');
+    if(!confirm('Tandai denda '+this.money(f.amount)+' sebagai sudah dibayar?'))return;
+    this.fines=this.fines.map(x=>x.id===f.id?{...x,paid:true,paidDate:new Date().toISOString()}:x);
+    this.persist();this.toast('Pembayaran denda berhasil dicatat');
+  },
+  saveSettings(){this.settings={...this.sf,libraryName:String(this.sf.libraryName||'').trim(),address:String(this.sf.address||'').trim()};this.persist();this.toast('Pengaturan disimpan')},
+  get stats(){
+    const total=this.fines.reduce((n,f)=>n+Number(f.amount||0),0),paid=this.fines.filter(f=>f.paid).reduce((n,f)=>n+Number(f.amount||0),0);
+    return [['Total transaksi',this.sales.length],['Sedang dipinjam',this.sales.filter(s=>s.status==='Aktif').length],['Terlambat',this.sales.filter(s=>this.isLate(s)).length],['Judul buku',this.books.length],['Anggota',this.members.length],['Total denda',this.money(total)],['Denda sudah dibayar',this.money(paid)],['Denda belum dibayar',this.money(total-paid)]];
+  }
+}}
+</script>
+</body>
+</html>
